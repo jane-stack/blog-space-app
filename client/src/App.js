@@ -1,24 +1,36 @@
-import logo from './logo.svg';
-import './App.css';
+import { useState } from "react";
+import { Switch, Route } from "react-router-dom";
+import { ErrorsProvider } from "./context/ErrorsContext";
+import { UserProvider } from "./context/UserContext";
+import { BlogProvider } from "./context/BlogContext";
+import Login from "./components/Login";
+import Signup from "./components/Signup";
+import Home from "./pages/Home";
+import Navbar from "./components/Navbar";
+import Errors from "./errors/Errors";
+import BlogList from "./pages/BlogList";
 
-function App() {
+const App = () => {
+  const [loading, setLoading] = useState(true);
+
   return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.js</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
-    </div>
+    <ErrorsProvider>
+      <UserProvider setLoading={setLoading}>
+        <BlogProvider>
+          <Navbar/>
+          <Errors/>
+          {
+            loading ? <h1>Loading...</h1> :
+            <Switch>
+              <Route exact path="/"><Home /></Route>
+              <Route exact path="/signup"><Signup /></Route>
+              <Route exact path="/login"><Login /></Route>
+              <Route exact path="/blogs"><BlogList /></Route>
+            </Switch>
+          }
+        </BlogProvider>
+      </UserProvider>
+    </ErrorsProvider>
   );
 }
 
